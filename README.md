@@ -78,3 +78,5 @@ step03: implement constrained Y-channel FGSM
 2. 自动化测试；
 3. `LEARNING_LOG.md`中的作者代码参考、独立复现和实验结果；
 4. 你的理解检查状态。
+
+体积较小的`metrics.json`会同步到GitHub，便于复核实验数据；生成的图片默认只保存在本地，避免仓库被大量中间文件占满。

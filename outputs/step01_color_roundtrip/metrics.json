@@ -1,0 +1,15 @@
+{
+  "input_file_name": "0001_321.png",
+  "input_sha256": "dc9486bec7b57ca956927c37f25db2d491839544b2b2a11d992288269297f202",
+  "width": 299,
+  "height": 299,
+  "float_roundtrip_max_absolute_error": 0.009476399999996943,
+  "float_roundtrip_mean_absolute_error": 0.0007867806706867459,
+  "integer_roundtrip_exactly_equal": false,
+  "integer_roundtrip_max_absolute_error": 1,
+  "integer_roundtrip_mean_absolute_error": 0.3045976368646137,
+  "integer_roundtrip_changed_channel_values": 81694,
+  "integer_roundtrip_changed_pixels": 64851,
+  "total_pixels": 89401,
+  "integer_roundtrip_changed_pixel_ratio": 0.725394570530531
+}

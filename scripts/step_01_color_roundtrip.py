@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -46,6 +47,7 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     original = np.asarray(Image.open(input_path).convert("RGB"), dtype=np.uint8)
+    input_sha256 = hashlib.sha256(input_path.read_bytes()).hexdigest()
 
     float_yuv = rgb_to_yuv444(original, quantize=False)
     float_recovered = yuv444_to_rgb(float_yuv, quantize=False, clip=False)
@@ -64,7 +66,8 @@ def main() -> None:
     Image.fromarray(amplified_difference).save(output_dir / "difference_x80.png")
 
     metrics = {
-        "input": str(input_path),
+        "input_file_name": input_path.name,
+        "input_sha256": input_sha256,
         "width": int(original.shape[1]),
         "height": int(original.shape[0]),
         "float_roundtrip_max_absolute_error": float(float_difference.max()),

@@ -1,6 +1,7 @@
 .venv/
 __pycache__/
 *.pyc
-outputs/*
+outputs/**
 !outputs/.gitkeep
-
+!outputs/**/
+!outputs/**/metrics.json
