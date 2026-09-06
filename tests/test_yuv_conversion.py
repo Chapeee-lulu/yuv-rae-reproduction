@@ -9,7 +9,7 @@ SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from yuv_rae.metrics import compare_uint8_images
+from yuv_rae.pixel_comparison import compare_rgb_pixels
 from yuv_rae.yuv_conversion import rgb_to_yuv, yuv_to_rgb
 
 
@@ -28,8 +28,8 @@ class YuvConversionTests(unittest.TestCase):
             dtype=np.uint8,
         )
         recovered = yuv_to_rgb(rgb_to_yuv(colors)).astype(np.uint8)
-        report = compare_uint8_images(colors, recovered)
-        self.assertLessEqual(report.max_absolute_error, 1)
+        result = compare_rgb_pixels(colors, recovered)
+        self.assertLessEqual(result.max_rgb_channel_absolute_error, 1)
 
     def test_invalid_shape_is_rejected(self) -> None:
         with self.assertRaises(ValueError):
@@ -38,4 +38,3 @@ class YuvConversionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

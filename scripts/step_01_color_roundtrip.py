@@ -14,7 +14,7 @@ SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from yuv_rae.metrics import compare_uint8_images
+from yuv_rae.pixel_comparison import compare_rgb_pixels
 from yuv_rae.yuv_conversion import rgb_to_yuv, yuv_to_rgb
 
 
@@ -54,7 +54,7 @@ def main() -> None:
     yuv = rgb_to_yuv(original, quantize=True)
     recovered_float = yuv_to_rgb(yuv, quantize=True, clip=True)
     recovered = recovered_float.astype(np.uint8)
-    report = compare_uint8_images(original, recovered)
+    pixel_comparison = compare_rgb_pixels(original, recovered)
 
     difference = np.abs(original.astype(np.int16) - recovered.astype(np.int16))
     amplified_difference = np.clip(difference * 80, 0, 255).astype(np.uint8)
@@ -63,36 +63,56 @@ def main() -> None:
     Image.fromarray(recovered).save(output_dir / "roundtrip.png")
     Image.fromarray(amplified_difference).save(output_dir / "difference_x80.png")
 
-    metrics = {
+    roundtrip_results = {
         "input_file_name": input_path.name,
         "input_sha256": input_sha256,
         "width": int(original.shape[1]),
         "height": int(original.shape[0]),
         "float_roundtrip_max_absolute_error": float(float_difference.max()),
         "float_roundtrip_mean_absolute_error": float(float_difference.mean()),
-        "integer_roundtrip_exactly_equal": report.exactly_equal,
-        "integer_roundtrip_max_absolute_error": report.max_absolute_error,
-        "integer_roundtrip_mean_absolute_error": report.mean_absolute_error,
-        "integer_roundtrip_changed_channel_values": report.changed_channel_values,
-        "integer_roundtrip_changed_pixels": report.changed_pixels,
-        "total_pixels": report.total_pixels,
-        "integer_roundtrip_changed_pixel_ratio": report.changed_pixel_ratio,
+        "integer_roundtrip_rgb_arrays_exactly_equal": (
+            pixel_comparison.rgb_arrays_exactly_equal
+        ),
+        "integer_roundtrip_max_rgb_channel_absolute_error": (
+            pixel_comparison.max_rgb_channel_absolute_error
+        ),
+        "integer_roundtrip_mean_rgb_channel_absolute_error": (
+            pixel_comparison.mean_rgb_channel_absolute_error
+        ),
+        "integer_roundtrip_changed_rgb_channel_value_count": (
+            pixel_comparison.changed_rgb_channel_value_count
+        ),
+        "integer_roundtrip_changed_rgb_pixel_count": (
+            pixel_comparison.changed_rgb_pixel_count
+        ),
+        "total_rgb_pixel_count": pixel_comparison.total_rgb_pixel_count,
+        "integer_roundtrip_changed_rgb_pixel_ratio": (
+            pixel_comparison.changed_rgb_pixel_ratio
+        ),
     }
     with (output_dir / "metrics.json").open("w", encoding="utf-8") as file:
-        json.dump(metrics, file, ensure_ascii=False, indent=2)
+        json.dump(roundtrip_results, file, ensure_ascii=False, indent=2)
 
     print("=== RGB → YUV → RGB 整数往返实验 ===")
     print(f"输入图像：{input_path}")
     print(f"图像尺寸：{original.shape[1]} × {original.shape[0]}")
     print(f"浮点往返最大绝对误差：{float_difference.max():.9f}")
     print(f"浮点往返平均绝对误差：{float_difference.mean():.9f}")
-    print(f"逐像素完全一致：{report.exactly_equal}")
-    print(f"最大绝对误差：{report.max_absolute_error}")
-    print(f"平均绝对误差：{report.mean_absolute_error:.6f}")
-    print(f"变化的通道值数量：{report.changed_channel_values}")
+    print(f"RGB数组逐像素完全一致：{pixel_comparison.rgb_arrays_exactly_equal}")
+    print(f"RGB单通道最大绝对误差：{pixel_comparison.max_rgb_channel_absolute_error}")
     print(
-        f"变化的像素数量：{report.changed_pixels}/{report.total_pixels} "
-        f"({report.changed_pixel_ratio:.2%})"
+        "RGB单通道平均绝对误差："
+        f"{pixel_comparison.mean_rgb_channel_absolute_error:.6f}"
+    )
+    print(
+        "变化的RGB通道值数量："
+        f"{pixel_comparison.changed_rgb_channel_value_count}"
+    )
+    print(
+        "变化的RGB像素数量："
+        f"{pixel_comparison.changed_rgb_pixel_count}/"
+        f"{pixel_comparison.total_rgb_pixel_count} "
+        f"({pixel_comparison.changed_rgb_pixel_ratio:.2%})"
     )
     print(f"指标记录：{output_dir / 'metrics.json'}")
     print(f"输出目录：{output_dir}")

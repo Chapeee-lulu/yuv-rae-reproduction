@@ -24,11 +24,12 @@ yuv_rae_reproduction/
 │  └─ yuv_rae/
 │     ├─ __init__.py
 │     ├─ yuv_conversion.py       RGB与YUV转换，数据保持4:4:4
-│     └─ metrics.py              逐像素误差统计
+│     └─ pixel_comparison.py     RGB逐像素一致性检查
 ├─ scripts/
 │  └─ step_01_color_roundtrip.py 第1步可执行实验
 ├─ tests/
 │  └─ test_yuv_conversion.py     第1步单元测试
+│  └─ test_pixel_comparison.py   检查各计数含义
 └─ outputs/                      实验输出，不存放源数据
 ```
 
