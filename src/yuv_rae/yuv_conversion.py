@@ -1,10 +1,9 @@
-"""论文公式中的RGB与YUV 4:4:4颜色空间转换。
+"""RGB与YUV颜色空间转换。
 
-输入和输出数组的最后一维均为三个颜色通道，数值尺度为0到255。
-这里独立按照论文公式实现，不导入作者仓库代码。
+本模块使用论文公式(13)、(14)，三个通道始终保持相同的高和宽，因此
+数据表示属于YUV 4:4:4。文件名和函数名不重复写444，具体采样方式在
+文档和函数说明中声明。
 """
-
-from __future__ import annotations
 
 import numpy as np
 
@@ -18,11 +17,11 @@ def _validate_three_channel_image(image: np.ndarray, name: str) -> np.ndarray:
     return array
 
 
-def rgb_to_yuv444(rgb: np.ndarray, *, quantize: bool = True) -> np.ndarray:
-    """按照论文公式(13)把RGB转换为YUV 4:4:4。
+def rgb_to_yuv(rgb: np.ndarray, *, quantize: bool = True) -> np.ndarray:
+    """按照论文公式(13)将RGB转换为YUV 4:4:4。
 
-    quantize=True表示模拟8位图像处理中对Y/U/V取整数的过程。
-    为了观察公式本身的误差，quantize=False会保留浮点值。
+    quantize=True表示模拟8位图像处理中对Y/U/V取整数的过程；
+    quantize=False保留浮点值，用于分析矩阵转换本身的数值误差。
     """
 
     rgb_float = _validate_three_channel_image(rgb, "rgb")
@@ -38,13 +37,13 @@ def rgb_to_yuv444(rgb: np.ndarray, *, quantize: bool = True) -> np.ndarray:
     return np.rint(yuv) if quantize else yuv
 
 
-def yuv444_to_rgb(
+def yuv_to_rgb(
     yuv: np.ndarray,
     *,
     quantize: bool = True,
     clip: bool = True,
 ) -> np.ndarray:
-    """按照论文公式(14)把YUV 4:4:4转换回RGB。"""
+    """按照论文公式(14)将YUV 4:4:4转换回RGB。"""
 
     yuv_float = _validate_three_channel_image(yuv, "yuv")
     luminance = yuv_float[..., 0]

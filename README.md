@@ -23,14 +23,16 @@ yuv_rae_reproduction/
 ├─ src/
 │  └─ yuv_rae/
 │     ├─ __init__.py
-│     ├─ color.py                RGB与YUV 4:4:4转换
+│     ├─ yuv_conversion.py       RGB与YUV转换，数据保持4:4:4
 │     └─ metrics.py              逐像素误差统计
 ├─ scripts/
 │  └─ step_01_color_roundtrip.py 第1步可执行实验
 ├─ tests/
-│  └─ test_color.py              第1步单元测试
+│  └─ test_yuv_conversion.py     第1步单元测试
 └─ outputs/                      实验输出，不存放源数据
 ```
+
+论文公式集中存放在`docs/paper_formulas/equations.md`，每个Python文件与论文、作者代码及公式的对应关系集中记录在`record.md`。
 
 ## 第1步：验证RGB与YUV转换
 

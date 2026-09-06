@@ -1,7 +1,5 @@
 """第1步：验证论文RGB/YUV公式的整数往返误差。"""
 
-from __future__ import annotations
-
 import argparse
 import hashlib
 import json
@@ -16,8 +14,8 @@ SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from yuv_rae.color import rgb_to_yuv444, yuv444_to_rgb
 from yuv_rae.metrics import compare_uint8_images
+from yuv_rae.yuv_conversion import rgb_to_yuv, yuv_to_rgb
 
 
 def parse_args() -> argparse.Namespace:
@@ -49,12 +47,12 @@ def main() -> None:
     original = np.asarray(Image.open(input_path).convert("RGB"), dtype=np.uint8)
     input_sha256 = hashlib.sha256(input_path.read_bytes()).hexdigest()
 
-    float_yuv = rgb_to_yuv444(original, quantize=False)
-    float_recovered = yuv444_to_rgb(float_yuv, quantize=False, clip=False)
+    float_yuv = rgb_to_yuv(original, quantize=False)
+    float_recovered = yuv_to_rgb(float_yuv, quantize=False, clip=False)
     float_difference = np.abs(original.astype(np.float64) - float_recovered)
 
-    yuv = rgb_to_yuv444(original, quantize=True)
-    recovered_float = yuv444_to_rgb(yuv, quantize=True, clip=True)
+    yuv = rgb_to_yuv(original, quantize=True)
+    recovered_float = yuv_to_rgb(yuv, quantize=True, clip=True)
     recovered = recovered_float.astype(np.uint8)
     report = compare_uint8_images(original, recovered)
 

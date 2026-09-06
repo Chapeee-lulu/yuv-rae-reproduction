@@ -1,6 +1,7 @@
-"""图像逐像素误差指标。"""
+"""图像逐像素检查量。
 
-from __future__ import annotations
+这些检查量用于审计“是否逐像素无损”，并不是论文组合提出的五项指标。
+"""
 
 from dataclasses import dataclass
 
@@ -43,4 +44,3 @@ def compare_uint8_images(reference: np.ndarray, candidate: np.ndarray) -> PixelE
         changed_pixels=int(np.count_nonzero(changed_pixel_mask)),
         total_pixels=int(changed_pixel_mask.size),
     )
-
