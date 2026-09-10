@@ -1,0 +1,14 @@
+{
+  "step": "8_independent_recovery",
+  "input": "E:\\Yuv_Reproduction\\outputs\\sup\\step08\\recovery_rae.png",
+  "output": "E:\\Yuv_Reproduction\\outputs\\sup\\step08\\recovered_from_file.png",
+  "image_shape": [
+    299,
+    299,
+    3
+  ],
+  "recovered_perturbation_nonzero_count": 19185,
+  "verification_original": "E:\\Yuv_Reproduction\\data\\original_img\\0001.png",
+  "exact_rgb_recovery": true,
+  "maximum_channel_error": 0
+}

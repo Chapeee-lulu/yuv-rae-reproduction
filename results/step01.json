@@ -1,0 +1,32 @@
+{
+  "step": "1_environment_project_structure_and_local_data",
+  "environment": {
+    "python_executable": "E:\\Yuv_Reproduction\\.venv\\Scripts\\python.exe",
+    "python_version": "3.11.9",
+    "torch_version": "2.7.1+cu128",
+    "torch_cuda_build": "12.8",
+    "cuda_available": true,
+    "gpu_name": "NVIDIA GeForce RTX 5060",
+    "gpu_compute_capability": [
+      12,
+      0
+    ],
+    "cuda_tensor_probe": 2.0,
+    "model_loaded": false
+  },
+  "dataset": {
+    "directory": "E:\\Yuv_Reproduction\\data\\original_img",
+    "image_count": 1000,
+    "filename_pattern": "^(?P<index>\\d{4})\\.png$",
+    "all_images_readable": true,
+    "image_modes": [
+      "RGB"
+    ],
+    "image_sizes": [
+      [
+        299,
+        299
+      ]
+    ]
+  }
+}

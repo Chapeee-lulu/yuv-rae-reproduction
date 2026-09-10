@@ -1,85 +1,127 @@
-# YUV 可逆对抗攻击：独立复现项目
+# YUV可逆对抗攻击复现
 
-这个目录用于从零复现论文 *Efficient and transferable reversible adversarial attacks utilizing YUV color space*。
+本项目复现论文 *Efficient and Transferable Reversible Adversarial Attacks Utilizing YUV Color Space* 的主要算法流程，包括RGB/YUV转换、ImageNet标签生成、Y通道攻击、模型集成、CAM区域约束、算术编码、PEE嵌入、可逆对抗样本生成与指标计算。
 
-## 原则
+代码按照Step 01—10组织。默认入口对应复现主路径；`_cmp`表示补充实现对比；`step10_pro.py`是在不替换串行入口的前提下提供的批量并行版本。完整运行记录、结果口径和已知限制见`Record.md`。
 
-1. 论文 PDF 和作者开源仓库保持只读。
-2. 本项目不导入作者仓库中的 Python 模块，也不直接复制其实现。
-3. 每一步先写清输入、输出和验证条件，再进入下一步。
-4. 先用 1 张图验证，再扩展到 10 张、100 张和完整数据集。
-
-## 目录
+## 项目结构
 
 ```text
-yuv_rae_reproduction/
-├─ README.md                     当前说明
-├─ PROJECT_STATUS.md             七阶段进度和验收条件
-├─ LEARNING_LOG.md               代码、思路、验证与理解检查
-├─ requirements-step01.txt       第1步所需依赖
-├─ notes/
-│  └─ step01_color_space.md      RGB/YUV转换原理与验证问题
-│  └─ STEP_TEMPLATE.md           后续每一步统一记录模板
-├─ src/
-│  └─ yuv_rae/
-│     ├─ __init__.py
-│     ├─ yuv_conversion.py       RGB与YUV转换，数据保持4:4:4
-│     └─ pixel_comparison.py     RGB逐像素一致性检查
-├─ scripts/
-│  └─ step_01_color_roundtrip.py 第1步可执行实验
-├─ tests/
-│  └─ test_yuv_conversion.py     第1步单元测试
-│  └─ test_pixel_comparison.py   检查各计数含义
-└─ outputs/                      实验输出，不存放源数据
+Yuv_Reproduction/
+├─ script/
+│  ├─ step01.py
+│  ├─ step02.py
+│  ├─ step03.py
+│  ├─ step04.py
+│  ├─ step05.py
+│  ├─ step06.py
+│  ├─ step07.py
+│  ├─ step08.py
+│  ├─ step09.py
+│  ├─ step10.py
+│  └─ step10_pro.py
+├─ src/yuv_reproduction/       # 核心算法与_cmp对比实现
+├─ data/val/imgn_labels.csv    # 外部验证标签
+├─ README.md
+├─ Record.md
+└─ Requirements.txt
 ```
 
-论文公式集中存放在`docs/paper_formulas/equations.md`，每个Python文件与论文、作者代码及公式的对应关系集中记录在`record.md`。
+仓库不包含ImageNet原图、模型权重、虚拟环境、运行缓存、批量输出以及自动测试文件。
 
-## 第1步：验证RGB与YUV转换
+## 环境
 
-在 PowerShell 中执行：
+Python 3.11。GPU批量实验需要CUDA环境；Step 01—09中的部分数据处理步骤可以在CPU上运行。
 
 ```powershell
-cd D:\Ecnu\yuv_rae_reproduction
-python -m pip install -r requirements-step01.txt
-python -m unittest discover -s tests -v
-python scripts\step_01_color_roundtrip.py `
-  --input "D:\Ecnu\Efficient-and-Transferable-Reversible-Adversarial-Attacks-Utilizing-YUV-Color-Space-main\ORI_IMG\0001_321.png"
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r .\Requirements.txt
 ```
 
-脚本会输出：
+Torchvision预训练模型会从本地缓存读取；本地不存在权重时需要联网下载。
 
-- RGB→YUV→RGB后是否逐像素完全一致；
-- 最大绝对像素误差；
-- 平均绝对误差；
-- 发生变化的像素数和比例；
-- 原图、往返转换图和放大后的差异图。
+## 数据准备
 
-第1步不是对抗攻击实验。它只回答一个基础问题：论文给出的RGB/YUV公式在整数图像上是否能够直接保证逐像素无损。
-
-## 数据和官方代码的位置
-
-- 论文：`D:\Ecnu\Efficient-and-transferable-reversible-adversarial-attacks-ut_2025_Neurocompu.pdf`
-- 作者仓库：`D:\Ecnu\Efficient-and-Transferable-Reversible-Adversarial-Attacks-Utilizing-YUV-Color-Space-main`
-
-两者仅作为论文依据、测试数据来源和结果对照，不属于本项目代码。
-
-## GitHub同步方式
-
-每完成一个可验证阶段后提交一次，不把多个阶段混在同一提交中：
+将1000张299×299的RGB PNG图片放入：
 
 ```text
-step01: verify RGB-YUV roundtrip
-step02: reproduce ImageNet inference preprocessing
-step03: implement constrained Y-channel FGSM
-...
+data/original_img/
+├─ 0001.png
+├─ 0002.png
+├─ ...
+└─ 1000.png
 ```
 
-每次提交前必须同时更新：
+`data/val/imgn_labels.csv`保存外部验证标签和作者原文件名，只用于Step 03核对生成标签。Step 03根据InceptionV3、GoogLeNet和DenseNet161的一致预测生成`results/step03_labels.csv`；Step 04—10读取该生成标签，不直接读取外部验证标签。
 
-1. 本阶段代码；
-2. 自动化测试；
-3. `LEARNING_LOG.md`中的作者代码参考、独立复现和实验结果；
-4. 你的理解检查状态。
+## 顺序运行
 
-体积较小的`metrics.json`会同步到GitHub，便于复核实验数据；生成的图片默认只保存在本地，避免仓库被大量中间文件占满。
+在项目根目录依次运行：
+
+```powershell
+.\.venv\Scripts\python.exe .\script\step01.py
+.\.venv\Scripts\python.exe .\script\step02.py
+.\.venv\Scripts\python.exe .\script\step03.py
+.\.venv\Scripts\python.exe .\script\step04.py
+.\.venv\Scripts\python.exe .\script\step05.py
+.\.venv\Scripts\python.exe .\script\step06.py
+.\.venv\Scripts\python.exe .\script\step07.py
+.\.venv\Scripts\python.exe .\script\step08.py
+.\.venv\Scripts\python.exe .\script\step09.py
+.\.venv\Scripts\python.exe .\script\step10.py
+```
+
+各步骤作用如下：
+
+| 步骤 | 内容 |
+| --- | --- |
+| Step 01 | 检查运行环境、图片数量、格式与命名 |
+| Step 02 | 实现RGB与YUV 4:4:4转换 |
+| Step 03 | 生成并核对ImageNet标签 |
+| Step 04 | 实现五种Y通道攻击 |
+| Step 05 | 实现三模型等权logits集成 |
+| Step 06 | 生成CAM显著区域掩膜 |
+| Step 07 | 实现算术编码与PEE可逆嵌入 |
+| Step 08 | 生成RAE并执行恢复流程 |
+| Step 09 | 计算PSNR、SSIM、CIEDE2000、ASR与恢复指标 |
+| Step 10 | 运行YUV、YACK、ENS、OURS消融流程 |
+
+## Step 10并行加速
+
+`step10.py`保留串行入口；`step10_pro.py`通过GPU批处理和CPU多进程加速1000张正式实验，并使用独立结果文件和断点，不覆盖串行结果。
+
+```powershell
+.\.venv\Scripts\python.exe .\script\step10_pro.py --sample-count 1000 --method all --attack all --epsilon-pixels 2 4 --max-outer-iterations 50 --saved-artifact-count 0 --gpu-batch-size 2 --cpu-workers 4
+```
+
+中断后使用相同参数并增加`--resume`。显存不足时程序会自动降低GPU批次；也可以手动调整`--gpu-batch-size`与`--cpu-workers`。不同批次和进程数可能造成少量数值边界差异，因此跨方法比较时应同时记录运行参数。
+
+## `_cmp`补充路径
+
+`_cmp`代码用于说明预处理、Y通道更新、CAM缩放和RGB恢复等实现选择对结果的影响，不属于论文主复现路径，也不替换默认算法。
+
+Step 03可通过以下命令启用ImageNet归一化对比：
+
+```powershell
+.\.venv\Scripts\python.exe .\script\step03.py --normalized-cmp
+```
+
+其余`_cmp`函数保留在对应核心模块中，便于阅读和单独调用。`outputs/cmp/`与主复现目录隔离，对比结果不计入论文主结果。
+
+## 输出目录
+
+- `results/`：各步骤生成的CSV与JSON结果。
+- `outputs/reproduction/`：复现主路径图片。
+- `outputs/cmp/`：`_cmp`补充对比图片。
+- `outputs/sup/`：工程补充产物。
+
+GitHub仅保留Step 01—10正式实验的CSV/JSON结果；生成图片、断点文件、测试小样和报告派生数据不上传。正式结果与结论边界以`Record.md`中的实际记录为准。
+
+## 已知边界
+
+- ASR与视觉指标需要同时结合成功生成数量理解，不能忽略容量失败样本。
+- YUV、YACK与ENS、OURS使用的白盒模型集合不同，跨方法迁移比较应统一使用共同黑盒模型。
+- Pro版本保留加速入口，但不同batch/workers下的耗时不能直接解释为算法速度优势。
+- 当前工程不将普通RGB文件路径表述为已经实现逐像素无损恢复。
+- RDH全量基线和额外未完成实验不作为本仓库已复现结果。

@@ -1,0 +1,25 @@
+{
+  "step": "5_s05_imgn_ensemble",
+  "device": "cuda",
+  "image": "0001.png",
+  "label": 321,
+  "models": [
+    "densenet161",
+    "inception_v3",
+    "googlenet"
+  ],
+  "weights": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+  ],
+  "individual_predictions": {
+    "densenet161": 321,
+    "inception_v3": 321,
+    "googlenet": 321
+  },
+  "ensemble_prediction": 321,
+  "ensemble_loss": 0.0728268027305603,
+  "strictly_equal_to_arithmetic_mean": true,
+  "maximum_absolute_difference": 0.0
+}

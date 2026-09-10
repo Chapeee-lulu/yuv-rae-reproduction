@@ -1,0 +1,70 @@
+{
+  "step": "9_paper_metrics",
+  "device": "cuda",
+  "image": "0001.png",
+  "label": 321,
+  "sample_count": 1,
+  "visual_metrics": {
+    "psnr": 36.46122731257334,
+    "ssim": 0.9671451336081741,
+    "mean_ciede2000": 2.2402685614937923
+  },
+  "model_predictions": {
+    "inception_v3": {
+      "clean_prediction": 321,
+      "rae_prediction": 325,
+      "clean_correct": true,
+      "attack_success": true
+    },
+    "googlenet": {
+      "clean_prediction": 321,
+      "rae_prediction": 321,
+      "clean_correct": true,
+      "attack_success": false
+    },
+    "densenet161": {
+      "clean_prediction": 321,
+      "rae_prediction": 323,
+      "clean_correct": true,
+      "attack_success": true
+    },
+    "resnet50": {
+      "clean_prediction": 321,
+      "rae_prediction": 322,
+      "clean_correct": true,
+      "attack_success": true
+    },
+    "vgg19": {
+      "clean_prediction": 321,
+      "rae_prediction": 321,
+      "clean_correct": true,
+      "attack_success": false
+    }
+  },
+  "white_box_asr_paper_denominator": {
+    "success_count": 2,
+    "sample_count": 3,
+    "attack_success_rate": 0.6666666666666666
+  },
+  "white_box_asr_clean_correct_only": {
+    "success_count": 2,
+    "sample_count": 3,
+    "attack_success_rate": 0.6666666666666666
+  },
+  "black_box_asr_paper_denominator": {
+    "success_count": 1,
+    "sample_count": 2,
+    "attack_success_rate": 0.5
+  },
+  "black_box_asr_clean_correct_only": {
+    "success_count": 1,
+    "sample_count": 2,
+    "attack_success_rate": 0.5
+  },
+  "exact_container_recovery": {
+    "exact_rgb_recovery": true,
+    "equal_pixel_ratio": 1.0,
+    "maximum_channel_error": 0
+  },
+  "runtime_seconds": 1.6113966000266373
+}

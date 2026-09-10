@@ -1,0 +1,76 @@
+{
+  "step": "3_imgn_inference",
+  "device": "cuda",
+  "mode": "reproduction",
+  "image_count": 1000,
+  "image_size": [
+    299,
+    299
+  ],
+  "model_input_tensor_range": [
+    0.0117647061124444,
+    1.0
+  ],
+  "normalization": "none",
+  "single_image_batch_shape": [
+    1,
+    3,
+    299,
+    299
+  ],
+  "white_box_models": [
+    "inception_v3",
+    "googlenet",
+    "densenet161"
+  ],
+  "black_box_models": [
+    "resnet50",
+    "vgg19"
+  ],
+  "models": {
+    "inception_v3": {
+      "role": "white_box",
+      "first_image_prediction": 321,
+      "runtime_seconds": 4.3905886999564245,
+      "first_image_val_label": 321,
+      "correct_count": 1000,
+      "accuracy": 1.0
+    },
+    "googlenet": {
+      "role": "white_box",
+      "first_image_prediction": 321,
+      "runtime_seconds": 3.327705000003334,
+      "first_image_val_label": 321,
+      "correct_count": 1000,
+      "accuracy": 1.0
+    },
+    "densenet161": {
+      "role": "white_box",
+      "first_image_prediction": 321,
+      "runtime_seconds": 8.599876399966888,
+      "first_image_val_label": 321,
+      "correct_count": 1000,
+      "accuracy": 1.0
+    },
+    "resnet50": {
+      "role": "black_box",
+      "first_image_prediction": 321,
+      "runtime_seconds": 4.991848599980585,
+      "first_image_val_label": 321,
+      "correct_count": 797,
+      "accuracy": 0.797
+    },
+    "vgg19": {
+      "role": "black_box",
+      "first_image_prediction": 321,
+      "runtime_seconds": 8.157443600008264,
+      "first_image_val_label": 321,
+      "correct_count": 667,
+      "accuracy": 0.667
+    }
+  },
+  "generated_label_count": 1000,
+  "generated_label_matches_val_count": 1000,
+  "white_box_jointly_correct_count": 1000,
+  "all_images_white_box_jointly_correct": true
+}

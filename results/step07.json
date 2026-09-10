@@ -1,0 +1,46 @@
+{
+  "step": "7_s0701_arithmetic_and_pee",
+  "image": "0001.png",
+  "artificial_array": {
+    "payload_length": 64,
+    "threshold": 1,
+    "bits_exactly_extracted": true,
+    "carrier_exactly_recovered": true
+  },
+  "s0701_arithmetic": {
+    "sequence_length": 89401,
+    "nonzero_symbols": 256,
+    "frequencies": [
+      [
+        -1,
+        128
+      ],
+      [
+        0,
+        89145
+      ],
+      [
+        1,
+        128
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "code_length": 2807,
+    "payload_length_with_frequency_table": 3207,
+    "perturbation_exactly_decoded": true
+  },
+  "uv_pee": {
+    "threshold": 1,
+    "capacity": 83082,
+    "payload_length": 3207,
+    "extracted_payload_length": 3207,
+    "payload_exactly_extracted": true,
+    "u_exactly_recovered": true,
+    "v_exactly_recovered": true,
+    "stego_minimum": 40,
+    "stego_maximum": 204
+  }
+}

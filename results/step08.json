@@ -1,0 +1,119 @@
+{
+  "step": "8_rae_generation_and_recovery",
+  "device": "cuda",
+  "image": "0001.png",
+  "label": 321,
+  "attack": "YMI-FGSM",
+  "attack_iterations": 3,
+  "epsilon": 0.00784313725490196,
+  "cam_target_category": 321,
+  "cam_mask_pixel_count": 19703,
+  "masked_y_nonzero_count": 19185,
+  "encoded_recovery_correction": "original_y_minus_adversarial_y",
+  "author_embedding": {
+    "payload_format": "author_code_only",
+    "threshold": 6,
+    "capacity": 170370,
+    "sequence_length": 89401,
+    "code_length": 120973,
+    "payload_length": 120973
+  },
+  "sup_exact_container_embedding": {
+    "threshold": 6,
+    "capacity": 170360,
+    "sequence_length": 89401,
+    "code_length": 120973,
+    "payload_length": 122013,
+    "frequencies": [
+      [
+        -6,
+        4459
+      ],
+      [
+        -5,
+        489
+      ],
+      [
+        -4,
+        440
+      ],
+      [
+        -3,
+        416
+      ],
+      [
+        -2,
+        3423
+      ],
+      [
+        -1,
+        409
+      ],
+      [
+        0,
+        70216
+      ],
+      [
+        1,
+        416
+      ],
+      [
+        2,
+        3254
+      ],
+      [
+        3,
+        369
+      ],
+      [
+        4,
+        380
+      ],
+      [
+        5,
+        336
+      ],
+      [
+        6,
+        4794
+      ],
+      [
+        7,
+        1
+      ]
+    ]
+  },
+  "paper_rgb_path": {
+    "rae_prediction": 325,
+    "attack_success": true,
+    "recovery_process_succeeded": false,
+    "exact_rgb_recovery": false,
+    "maximum_channel_error": null,
+    "error": "RGB/YUV整数往返已破坏嵌入载荷",
+    "changed_yuv_value_count": [
+      936,
+      1052,
+      944
+    ],
+    "maximum_yuv_value_error": [
+      4,
+      6,
+      6
+    ]
+  },
+  "sup_png_path": {
+    "container_size_bytes": 515837,
+    "visible_rgb_matches_reproduction": true,
+    "perturbation_exactly_recovered": true,
+    "exact_rgb_recovery": true,
+    "maximum_channel_error": 0
+  },
+  "exact_container_path": {
+    "container_size_bytes": 320396,
+    "yuv_exactly_recovered": true,
+    "perturbation_exactly_recovered": true,
+    "exact_rgb_recovery": true,
+    "maximum_channel_error": 0
+  },
+  "runtime_seconds": 8.272157000028528
+}
